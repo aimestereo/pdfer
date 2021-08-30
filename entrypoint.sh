@@ -44,7 +44,7 @@ EOF
 }
 
 
-# check that contaner was run with command like /bin/bash
+# check that container was run with command like /bin/bash
 # to enter inside container in interactive mode
 if [ -x "$(command -v $1 &> /dev/null)" ]; then
   echo 'First argument is executable, skipping entrypoint'
@@ -53,6 +53,8 @@ if [ -x "$(command -v $1 &> /dev/null)" ]; then
 fi
 
 
+# Manual loop to parse all options in GNU-style
+# http://mywiki.wooledge.org/BashFAQ/035#Manual_loop
 while [ ! $# -eq 0 ]; do
     case "$1" in
         --debug)
@@ -61,6 +63,10 @@ while [ ! $# -eq 0 ]; do
         -h | --help)
             usage
             exit
+            ;;
+        --)              # End of all options.
+            shift
+            break
             ;;
         -?*)
             printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
